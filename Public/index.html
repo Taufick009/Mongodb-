@@ -24,7 +24,6 @@
     <script>
         async function fetchBooks() {
             try {
-                // ✅ Correct API URL
                 const response = await fetch("http://localhost:5000/books");
                 if (!response.ok) throw new Error("Failed to fetch books");
 
@@ -42,54 +41,35 @@
                 console.error("Error fetching books:", error);
             }
         }
-    </script>
-    <script>
-    document.getElementById("bookForm").addEventListener("submit", async function (event) {
-    event.preventDefault(); // Prevent page reload
 
-    const title = document.getElementById("title").value;
-    const author = document.getElementById("author").value;
-    const year = document.getElementById("year").value;
+        document.getElementById("bookForm").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Prevent page reload
 
-    const newBook = { title, author, year };
+            const title = document.getElementById("title").value;
+            const author = document.getElementById("author").value;
+            const year = document.getElementById("year").value;
 
-    try {
-        const response = await fetch("http://localhost:5000/books", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newBook),
+            const newBook = { title, author, year };
+
+            try {
+                const response = await fetch("http://localhost:5000/books", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(newBook),
+                });
+
+                if (response.ok) {
+                    document.getElementById("bookForm").reset(); // Clear form
+                    fetchBooks(); // Refresh book list
+                } else {
+                    console.error("❌ Failed to add book");
+                }
+            } catch (error) {
+                console.error("❌ Error:", error);
+            }
         });
-
-        if (response.ok) {
-            document.getElementById("bookForm").reset(); // Clear form
-            fetchBooks(); // Refresh book list
-        } else {
-            console.error("❌ Failed to add book");
-        }
-    } catch (error) {
-        console.error("❌ Error:", error);
-    }
-});
-
-async function fetchBooks() {
-    try {
-        const response = await fetch("http://localhost:5000/books");
-        const books = await response.json();
-
-        const bookList = document.getElementById("bookList");
-        bookList.innerHTML = ""; // Clear existing list
-
-        books.forEach(book => {
-            const li = document.createElement("li");
-            li.textContent = `${book.title} by ${book.author} (${book.year})`;
-            bookList.appendChild(li);
-        });
-    } catch (error) {
-        console.error("❌ Error fetching books:", error);
-    }
-}
     </script>
 </body>
 </html>
